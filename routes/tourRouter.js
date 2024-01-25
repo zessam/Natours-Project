@@ -4,12 +4,12 @@ const fs = require('fs');
 
 const tourRouter = express.Router();
 
-tourRouter.param('id', tourController.checkID);
+//tourRouter.param('id');
 
 tourRouter
   .route('/')
   .get(tourController.getAllTours)
-  .post(tourController.checkBody, tourController.createTour);
+  .post(tourController.createTour);
 
 tourRouter
   .route('/:id')

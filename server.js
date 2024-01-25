@@ -14,12 +14,28 @@ mongoose
   .connect(DB, {
     useNewUrlParser: true,
     useCreateIndex: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useUnifiedTopology: true
   })
   .then(conn => {
-    console.log(conn.connections);
+    //console.log(conn.connections);
     console.log('DB connection successful!');
   });
+
+// const testTour = new tourModel({
+//   name: 'The Forest Hiker',
+//   rating: 4.7,
+//   price: 50
+// });
+// testTour.save().then(doc => {
+//   console.log(doc)
+// }).catch(err => {
+//   if (err.code === 11000) {
+//     console.log('Duplicate key error. A tour with the same name already exists.');
+//   } else {
+//     console.log('Error:', err);
+//   }
+// });
 
 //console.log(app.get('env'));
 //console.log(process.env)
