@@ -3,6 +3,7 @@
         "apifeatures",
         "Expressjs",
         "natours",
-        "requestat"
+        "requestat",
+        "virtuals"
     ]
 }
