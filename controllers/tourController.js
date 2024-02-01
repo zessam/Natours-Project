@@ -82,7 +82,7 @@ exports.createTour = async (req, res) => {
     // newTour.save()
 
     const newTour = await Tour.create(req.body);
-
+    //console.log(req)
     res.status(201).json({
       status: 'success',
       requestedAt: req.requestTime,
