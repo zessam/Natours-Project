@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const slugify = require('slugify');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -10,7 +11,6 @@ const userSchema = new mongoose.Schema({
     maxlength: [30, 'A user name must less or equal than 30 characters'],
     minlength: [5, 'A user name must more or equal than 5 characters']
   },
-  slug: String,
   email: {
     type: String,
     required: [true, 'A user must have a valid email'],
@@ -30,10 +30,11 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please confirm your password'],
     validate: {
-      validator: function(v) {
-        return v === this.password;
+      // Works On Save & Create Only !!
+      validator: function(el) {
+        return el === this.password;
       },
-      message: props => 'Passwords do not match'
+      message: 'Passwords do not match'
     }
   },
   photo: {
@@ -46,6 +47,17 @@ const userSchema = new mongoose.Schema({
 //   this.slug = slugify(this.name, { lower: true });
 //   next();
 // });
+
+// Pre save middleware to encrypt the passwords
+userSchema.pre('save', async function(next) {
+  // Only run if it is modified
+  if (!this.isModified('password')) return next();
+
+  // HASH
+  this.password = await bcrypt.hash(this.password, 12);
+  this.passwordConfirm = undefined;
+  next();
+});
 
 const User = mongoose.model('User', userSchema);
 
