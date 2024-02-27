@@ -65,7 +65,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     token = req.headers.authorization.split(' ')[1];
   }
 
-  console.log(token);
+  //console.log(token);
 
   if (!token) {
     return next(
@@ -74,7 +74,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
   // 2) Validate the token
   const decoded = await promisify(jwt.verify)(token, process.env.JWT_SECRET);
-  console.log(decoded);
+  //console.log(decoded);
   // 3) Check if user still exists
   const currentUser = await User.findById(decoded.id);
   if (!currentUser) {
@@ -85,6 +85,21 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new AppError('User password recently changed'), 401);
   }
 
-  req.user = currentUser 
+  req.user = currentUser;
   next();
 });
+
+// Restrict certain routes to certain users
+exports.restrictTo = (...roles) => {
+  return (req, res, next) => {
+    // roles ['admin', 'lead-guide']
+    if (!roles.includes(req.user.role)) {
+      return next(
+        new AppError('You do not have permission to perform this action', 403)
+      );
+    }
+
+    next();
+  };
+};
+
