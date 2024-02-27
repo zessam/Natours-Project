@@ -81,7 +81,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     return next(new AppError('The token is no longer exist.', 401));
   }
   // 4) Check if user changed password after token issued
-  if (currentUser.changesPasswordAfter(decoded.iat)) {
+  if (currentUser.changedPasswordAfter(decoded.iat)) {
     return next(new AppError('User password recently changed'), 401);
   }
 
